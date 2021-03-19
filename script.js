@@ -33,12 +33,47 @@ var simulation = d3.forceSimulation()
     // and draw them around the centre of the space
     .force("center", d3.forceCenter(width / 2, height / 2));
 
+
+// get the data
+$.ajaxSetup({
+    async: false
+});
+var graph;
+$.getJSON("mention_network.json", function(json){
+    graph = json;
+});
+$.ajaxSetup({
+    async: true
+});
+
 // load the graph
-d3.json("mention_network.json", function(error, graph) {
+// d3.json("mention_network.json", function(error, graph) {
+    var dropdown = d3.select("body")
+        .append("select")
+        .attr("name", "lane_select")
+        .attr("id", "lane_select")
+
     // set the nodes
     var nodes = graph.nodes;
     // links between nodes
     var links = graph.links;
+
+    var tempdown = d3.select("#lane_select");
+    tempdown.attr("onchange", "writeThis(this.value)");
+    var ids = new Set(links.map(function (e){return e.value}));
+    for (const value of ids) {
+        tempdown.append("option")
+            .attr("value", value)
+            .text(value);
+    }
+    function writeThis(selection) {
+        console.log(selection);
+        mouseOut();
+        link.style("stroke", function(o){
+            return o.value === Number(selection) ? "#000000" : "#ddd";
+        })
+
+    }
     
     // add the curved links to our graphic
     var link = svg.selectAll(".link")
@@ -154,6 +189,7 @@ d3.json("mention_network.json", function(error, graph) {
     // fade nodes on hover
     function mouseOver(opacity) {
         return function(d) {
+            console.log(d);
             // check all other nodes to see if they're connected
             // to this one. if so, keep the opacity at 1, otherwise
             // fade
@@ -170,6 +206,7 @@ d3.json("mention_network.json", function(error, graph) {
                 return o.source === d || o.target === d ? 1 : opacity;
             });
             link.style("stroke", function(o){
+                // console.log(o);
                 return o.source === d || o.target === d ? o.source.colour : "#ddd";
             });
         };
@@ -182,4 +219,4 @@ d3.json("mention_network.json", function(error, graph) {
         link.style("stroke", "#ddd");
     }
 
-});
+// });
