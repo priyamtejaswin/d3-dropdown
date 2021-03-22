@@ -38,7 +38,7 @@
         {
             "name": "source_1",
             "id": 13,
-            "colour": "#12492f"
+            "colour": "#33cc85"
         },
         {
             "name": "sink_1",
@@ -48,7 +48,7 @@
         {
             "name": "source_2",
             "id": 15,
-            "colour": "#12492f"
+            "colour": "#33cc85"
         },
         {
             "name": "sink_2",
@@ -58,7 +58,7 @@
         {
             "name": "source_3",
             "id": 17,
-            "colour": "#12492f"
+            "colour": "#33cc85"
         },
         {
             "name": "sink_3",
@@ -68,7 +68,7 @@
         {
             "name": "source_4",
             "id": 19,
-            "colour": "#12492f"
+            "colour": "#33cc85"
         },
         {
             "name": "sink_4",
