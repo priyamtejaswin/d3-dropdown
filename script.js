@@ -9,6 +9,12 @@ var margin = {
     right: 50,
 }
 
+// drop down
+var dropdown = d3.select("body")
+.append("select")
+.attr("name", "lane_select")
+.attr("id", "lane_select")
+
 // create an svg to draw in
 var svg = d3.select("body")
     .append("svg")
@@ -48,10 +54,6 @@ $.ajaxSetup({
 
 // load the graph
 // d3.json("mention_network.json", function(error, graph) {
-    var dropdown = d3.select("body")
-        .append("select")
-        .attr("name", "lane_select")
-        .attr("id", "lane_select")
 
     // set the nodes
     var nodes = graph.nodes;
@@ -66,12 +68,32 @@ $.ajaxSetup({
             .attr("value", value)
             .text(value);
     }
-    function writeThis(selection) {
+    function writeThis(dropval) {
+        const selection = Number(dropval);
         console.log(selection);
-        mouseOut();
-        link.style("stroke", function(o){
-            return o.value === Number(selection) ? "#000000" : "#ddd";
-        })
+        mouseOut();  // clear the previous selection
+
+        const opacity = 0.1;
+        var validNodes = new Set();
+        for (const l of links.filter(function (l) {return l.value === selection})) {
+            validNodes.add(l.source.id);
+            validNodes.add(l.target.id);
+        }
+        // apply styles for the new selection
+        node.style("stroke-opacity", function(o) {
+            thisOpacity = validNodes.has(o.id) ? 1 : opacity;
+            return thisOpacity;
+        });
+        node.style("fill-opacity", function(o) {
+            thisOpacity = validNodes.has(o.id) ? 1 : opacity;
+            return thisOpacity;
+        });
+        link.style("stroke-opacity", function(o) {
+            return o.value === selection ? 1 : opacity;
+        });
+        link.style("stroke", function(o) {
+            return o.value === selection ? "#000000" : "#ddd";
+        });
 
     }
     
@@ -96,9 +118,9 @@ $.ajaxSetup({
         .attr("r", 8)
         .attr("fill", function(d) {
             return d.colour;
-        })
-        .on("mouseover", mouseOver(.2))
-        .on("mouseout", mouseOut);
+        });
+        // .on("mouseover", mouseOver(.2))
+        // .on("mouseout", mouseOut);
 
     // hover text for the node
     node.append("title")
