@@ -45,7 +45,7 @@ $.ajaxSetup({
     async: false
 });
 var graph;
-$.getJSON("mention_network.json", function(json){
+$.getJSON("cvxpy_tp2.json", function(json){
     graph = json;
 });
 $.ajaxSetup({
@@ -60,24 +60,49 @@ $.ajaxSetup({
     // links between nodes
     var links = graph.links;
 
+    // populate dropdown
     var tempdown = d3.select("#lane_select");
     tempdown.attr("onchange", "writeThis(this.value)");
-    var ids = new Set(links.map(function (e){return e.value}));
+    var ids = new Set();
+    for (const l of links) {
+        for (const [key, value] of Object.entries(l.lanes)) {
+            ids.add(key);
+        }
+    }
     for (const value of ids) {
         tempdown.append("option")
             .attr("value", value)
             .text(value);
     }
-    function writeThis(dropval) {
-        const selection = Number(dropval);
+    // highlight nodes and edges `onchange`
+    function writeThis(selection) {
+        // const selection = Number(dropval);
         console.log(selection);
         mouseOut();  // clear the previous selection
 
         const opacity = 0.1;
+        var validLinkIndices = new Set();
+        for (const l of links) {
+            var used = false;
+            const lanes = Object.entries(l.lanes);
+            for (const [k, v] of lanes) {
+                if (k == selection && v == 1) {used = true}
+            }
+            if (used == true) {
+                // var toadd = new Map();
+                // toadd.set('source', l.source);
+                // toadd.set('target', l.target);
+                // toadd.set('lanes', lanes);
+                
+                validLinkIndices.add(l.index);
+            }
+        }
         var validNodes = new Set();
-        for (const l of links.filter(function (l) {return l.value === selection})) {
-            validNodes.add(l.source.id);
-            validNodes.add(l.target.id);
+        for (const l of links) {
+            if (validLinkIndices.has(l.index)) {
+                validNodes.add(l.source.id);
+                validNodes.add(l.target.id);
+            }
         }
         // apply styles for the new selection
         node.style("stroke-opacity", function(o) {
@@ -89,10 +114,12 @@ $.ajaxSetup({
             return thisOpacity;
         });
         link.style("stroke-opacity", function(o) {
-            return o.value === selection ? 1 : opacity;
+            // return o.value === selection ? 1 : opacity;
+            return validLinkIndices.has(o.index) ? 1 : opacity;
         });
         link.style("stroke", function(o) {
-            return o.value === selection ? "#000000" : "#ddd";
+            // return o.value === selection ? "#000000" : "#ddd";
+            return validLinkIndices.has(o.index) ? "#000000" : "#ddd";
         });
 
     }
@@ -125,7 +152,7 @@ $.ajaxSetup({
     // hover text for the node
     node.append("title")
         .text(function(d) {
-            return d.twitter;
+            return d.name;
         });
 
     // add a label to each node
