@@ -45,7 +45,7 @@ $.ajaxSetup({
     async: false
 });
 var graph;
-$.getJSON("cvxpy_tp2.json", function(json){
+$.getJSON("cvxpy_groupflow.json", function(json){
     graph = json;
 });
 $.ajaxSetup({
@@ -65,8 +65,9 @@ $.ajaxSetup({
     tempdown.attr("onchange", "writeThis(this.value)");
     var ids = new Set();
     for (const l of links) {
-        for (const [key, value] of Object.entries(l.lanes)) {
+        for (const key of l.lanes) {
             ids.add(key);
+            console.log("reading lanes:" + key);
         }
     }
     for (const value of ids) {
@@ -84,9 +85,9 @@ $.ajaxSetup({
         var validLinkIndices = new Set();
         for (const l of links) {
             var used = false;
-            const lanes = Object.entries(l.lanes);
-            for (const [k, v] of lanes) {
-                if (k == selection && v == 1) {used = true}
+            // const lanes = Object.entries(l.lanes);
+            for (const [k, sortdest, isxd] of l.active) {
+                if (k == selection) {used = true}
             }
             if (used == true) {
                 // var toadd = new Map();
