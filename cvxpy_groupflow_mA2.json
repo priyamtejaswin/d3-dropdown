@@ -1,0 +1,158 @@
+{
+    "nodes": [
+        {
+            "name": "mA",
+            "id": 1,
+            "colour": "#E9C46A"
+        },
+        {
+            "name": "mB",
+            "id": 2,
+            "colour": "#E9C46A"
+        },
+        {
+            "name": "dC",
+            "id": 3,
+            "colour": "#F4A261"
+        },
+        {
+            "name": "dD",
+            "id": 4,
+            "colour": "#F4A261"
+        },
+        {
+            "name": "source_1",
+            "id": 5,
+            "colour": "#264653"
+        },
+        {
+            "name": "sink_1",
+            "id": 6,
+            "colour": "#2A9D8F"
+        },
+        {
+            "name": "source_2",
+            "id": 7,
+            "colour": "#264653"
+        },
+        {
+            "name": "sink_2",
+            "id": 8,
+            "colour": "#2A9D8F"
+        }
+    ],
+    "links": [
+        {
+            "source": 1,
+            "target": 2,
+            "lanes": [
+                1,
+                2,
+                1,
+                2
+            ],
+            "active": [
+                [
+                    1,
+                    4,
+                    false
+                ]
+            ]
+        },
+        {
+            "source": 1,
+            "target": 3,
+            "lanes": [
+                2,
+                2
+            ],
+            "active": [
+                [
+                    2,
+                    3,
+                    false
+                ]
+            ]
+        },
+        {
+            "source": 2,
+            "target": 3,
+            "lanes": [
+                2,
+                2
+            ],
+            "active": []
+        },
+        {
+            "source": 2,
+            "target": 4,
+            "lanes": [
+                1,
+                1
+            ],
+            "active": [
+                [
+                    1,
+                    4,
+                    true
+                ]
+            ]
+        },
+        {
+            "source": 3,
+            "target": 8,
+            "lanes": [
+                2
+            ],
+            "active": [
+                [
+                    2,
+                    8,
+                    false
+                ]
+            ]
+        },
+        {
+            "source": 4,
+            "target": 6,
+            "lanes": [
+                1
+            ],
+            "active": [
+                [
+                    1,
+                    6,
+                    false
+                ]
+            ]
+        },
+        {
+            "source": 5,
+            "target": 1,
+            "lanes": [
+                1
+            ],
+            "active": [
+                [
+                    1,
+                    1,
+                    false
+                ]
+            ]
+        },
+        {
+            "source": 7,
+            "target": 1,
+            "lanes": [
+                2
+            ],
+            "active": [
+                [
+                    2,
+                    1,
+                    false
+                ]
+            ]
+        }
+    ]
+}

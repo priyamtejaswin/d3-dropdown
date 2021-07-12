@@ -45,7 +45,7 @@ $.ajaxSetup({
     async: false
 });
 var graph;
-$.getJSON("cvxpy_groupflow.json", function(json){
+$.getJSON("cvxpy_groupflow_mA1.json", function(json){
     graph = json;
 });
 $.ajaxSetup({
@@ -81,11 +81,11 @@ $.ajaxSetup({
         console.log(selection);
         mouseOut();  // clear the previous selection
 
-        const opacity = 0.1;
+        const opacity = 0.5;
         var validLinkIndices = new Set();
         for (const l of links) {
             var used = false;
-            // const lanes = Object.entries(l.lanes);
+            // Iterate over [lane, sortdest, isxd].
             for (const [k, sortdest, isxd] of l.active) {
                 if (k == selection) {used = true}
             }
@@ -120,9 +120,31 @@ $.ajaxSetup({
         });
         link.style("stroke", function(o) {
             // return o.value === selection ? "#000000" : "#ddd";
-            return validLinkIndices.has(o.index) ? "#000000" : "#ddd";
+            var crossdock = null;
+            for (const [lane, sortdest, isxd] of o.active) {
+                if (lane == selection) {
+                    crossdock = isxd;
+                }
+            }
+            if (crossdock == true) {return "#a8dadc"}
+            else if (crossdock == false) {return "#e63946"}
+            else {"#ddd"}
+            // return validLinkIndices.has(o.index) ? "#000000" : "#ddd";
         });
-
+        link.text(function(o) {
+            var sd = null;
+            for (const [lane, sortdest, isxd] of o.active) {
+                if (lane == selection) {
+                    sd = sortdest;
+                }
+            }
+            var name = "";
+            for (ndict of nodes) {
+                if (ndict.id == sd) {name = ndict.name}
+            }
+            console.log("Writing link names:" + name);
+            return name;
+        });
     }
     
     // create the arrows
@@ -184,6 +206,10 @@ $.ajaxSetup({
         .style("fill", function(d) {
             return d.colour;
         });
+
+    link.append("text")
+        .attr("font-family", "Arial, Helvetica, sans-serif")
+        .attr("fill", "Black");
 
     // add the nodes to the simulation and
     // tell it what to do on each tick
